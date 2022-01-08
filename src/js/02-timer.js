@@ -1,5 +1,6 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 const inputDataTime = document.querySelector('input[type = text]');
 const startBtn = document.querySelector('button[data-start]');
@@ -20,7 +21,15 @@ const options = {
     const finishTime = selectedDates[0].getTime();
 
     if (currentTime >= finishTime) {
-      window.alert('Please choose a date in the future');
+      Notify.warning('Please choose a date in the future', {
+        position: 'center-top',
+        width: '400px',
+        timeout: 3000,
+        closeButton: true,
+        backOverlay: true,
+        backOverlayColor: 'rgba(0,0,0,0.1)',
+        fontSize: '20px',
+      });
       return;
     }
 
@@ -60,18 +69,18 @@ function convertMs(ms) {
   const day = hour * 24;
 
   // Remaining days
-  const days = pad(Math.floor(ms / day));
+  const days = addLeadingZero(Math.floor(ms / day));
   // Remaining hours
-  const hours = pad(Math.floor((ms % day) / hour));
+  const hours = addLeadingZero(Math.floor((ms % day) / hour));
   // Remaining minutes
-  const minutes = pad(Math.floor(((ms % day) % hour) / minute));
+  const minutes = addLeadingZero(Math.floor(((ms % day) % hour) / minute));
   // Remaining seconds
-  const seconds = pad(Math.floor((((ms % day) % hour) % minute) / second));
+  const seconds = addLeadingZero(Math.floor((((ms % day) % hour) % minute) / second));
 
   return { days, hours, minutes, seconds };
 }
 
-function pad(value) {
+function addLeadingZero(value) {
   return String(value).padStart(2, '0');
 }
 
